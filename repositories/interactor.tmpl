@@ -1,0 +1,15 @@
+package interactors
+
+type {{.UpperName}} interface {
+	MyMethod() error
+}
+
+type {{.LowerName}} struct {}
+
+func New{{.UpperName}}() {{.UpperName}} {
+	return &{{.LowerName}}{}
+}
+
+func (a *{{.LowerName}}) MyMethod() error {
+	return nil
+}

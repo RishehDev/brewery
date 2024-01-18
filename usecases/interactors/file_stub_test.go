@@ -8,18 +8,22 @@ func NewFileTest() repositories.File {
 	return &fileTest{}
 }
 
-func (f *fileTest) CreateController(name string) error {
+func (f *fileTest) CreateController(projectName string, name string) error {
 	return nil
 }
 
-func (f *fileTest) CreateInteractor(name string) error {
+func (f *fileTest) CreateInteractor(projectName string, name string) error {
 	return nil
 }
 
-func (f *fileTest) CreateModel(name string) error {
+func (f *fileTest) CreateModel(projectName string, name string) error {
 	return nil
 }
 
-func (f *fileTest) CreateEntity(name string) error {
+func (f *fileTest) CreateEntity(projectName string, name string) error {
+	return nil
+}
+
+func (f *fileTest) CreateRegistry(projectName string, name string) error {
 	return nil
 }

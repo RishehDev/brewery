@@ -84,7 +84,22 @@ func (f generalTemplate) GetModelTemplate(name string) *entities.GeneralTemplate
 }
 
 func (f generalTemplate) GetEntityTemplate(name string) *entities.GeneralTemplate {
-	return nil
+	generalTemplate := &entities.GeneralTemplate{}
+	f.setNames(generalTemplate, name)
+	generalTemplate.TemplateType = "entity"
+	generalTemplate.Path = f.projectName + "/usecases/interactors/" + generalTemplate.LowerName + "_entity.go"
+	generalTemplate.ProjectName = f.projectName
+	generalTemplate.Template = `package entities
+
+		type {{.UpperName}} struct {
+				ID        uint        
+				CreatedAt time.Time
+				UpdatedAt time.Time
+				DeletedAt gorm.DeletedAt 
+		}
+	`
+
+	return generalTemplate
 }
 
 func (f generalTemplate) GetRegistryTemplate() *entities.GeneralTemplate {

@@ -55,6 +55,7 @@ func (a projectInteractor) CreateWebService(name string) error {
 	a.createFile(a.httpTemplate.GetRoutesTemplate())
 	a.createFile(a.httpTemplate.GetControllerTemplate("index"))
 	a.createFile(a.httpTemplate.GetMainTemplate())
+	a.createFile(a.generalTemplate.GetEntityTemplate("entity"))
 
 	return nil
 }

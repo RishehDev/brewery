@@ -3,6 +3,7 @@ package repositories
 import (
 	"brewery/entities"
 	"brewery/usecases/repositories"
+	"runtime"
 	"unicode"
 )
 
@@ -128,6 +129,22 @@ import (
 func (r *registry) New{{.UpperName}}Controller() controllers.{{.UpperName}}Controller {
 	return controllers.New{{.UpperName}}Controller()
 }`
+	return generalTemplate
+}
+
+func (f generalTemplate) GetModTemplate() *entities.GeneralTemplate {
+	generalTemplate := &entities.GeneralTemplate{}
+	generalTemplate.TemplateType = "GoMod"
+	generalTemplate.Path = f.projectName + "/go.mod"
+	generalTemplate.ProjectName = f.projectName
+
+	version := runtime.Version()
+	v := make(map[string]string)
+	v["version"] = version[2:]
+	generalTemplate.Data = v
+	generalTemplate.Template = `module {{.ProjectName}}
+	{{ $data := .Data }}
+go {{ $data.version }}`
 	return generalTemplate
 }
 

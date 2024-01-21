@@ -7,4 +7,5 @@ type GeneralTemplate struct {
 	Path         string
 	Template     string
 	TemplateType string
+	Data         map[string]string
 }

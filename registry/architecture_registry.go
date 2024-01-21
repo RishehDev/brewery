@@ -9,6 +9,7 @@ import (
 func (r *registry) NewProjectController() controllers.ProjectController {
 	projectInteractor := interactors.NewProjectInteractor(
 		repositories.NewGeneralTemplate(),
+		repositories.NewHttpServerTemplate(),
 	)
 	return controllers.NewProjectController(projectInteractor)
 }

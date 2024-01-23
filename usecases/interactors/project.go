@@ -10,15 +10,21 @@ import (
 	"text/template"
 )
 
+// ProjectInteractor is the interface used by the controllers for comunicate with projectInteractor and new posible versions
 type ProjectInteractor interface {
 	CreateWebService(name string) error
 }
 
+// projectInteractor contain all the repositories that this interactor needed.
+// this repositories are injected in the registry
 type projectInteractor struct {
 	generalTemplate repositories.GeneralTemplate
 	httpTemplate    repositories.HTTPServerTemplate
 }
 
+// NewProjectInteractor is the constructor for NewProjectInteractor
+// The input are the repos that the struct need
+// The return is an interface, ProjectInteractor in this case
 func NewProjectInteractor(repo repositories.GeneralTemplate, httpRepo repositories.HTTPServerTemplate) ProjectInteractor {
 	return &projectInteractor{
 		generalTemplate: repo,
@@ -26,6 +32,7 @@ func NewProjectInteractor(repo repositories.GeneralTemplate, httpRepo repositori
 	}
 }
 
+// CreateWebService create all the structure for a simple web services
 func (a projectInteractor) CreateWebService(name string) error {
 	folders := []string{
 		name,
@@ -59,6 +66,8 @@ func (a projectInteractor) CreateWebService(name string) error {
 	return nil
 }
 
+// createFolders a method for create all the folders
+// The input is an slice of strings with all the path
 func (a projectInteractor) createFolders(names []string) error {
 	for _, name := range names {
 		if _, err := os.Stat(name); errors.Is(err, os.ErrNotExist) {
@@ -73,7 +82,9 @@ func (a projectInteractor) createFolders(names []string) error {
 	return nil
 }
 
-func (a projectInteractor) createFile(templateStruct *entities.GeneralTemplate) error {
+// createFile this function create the file using a Template struct located in entities
+// The input is a struct template located in entities
+func (a projectInteractor) createFile(templateStruct *entities.Template) error {
 	newFile, err := os.Create(templateStruct.Path)
 	defer newFile.Close()
 	if err != nil {

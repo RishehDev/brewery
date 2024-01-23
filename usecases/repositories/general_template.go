@@ -2,14 +2,15 @@ package repositories
 
 import "brewery/entities"
 
+// Template this interface is used by the interactor for comunicate with the repository
 type GeneralTemplate interface {
-	GetControllerTemplate(string) *entities.GeneralTemplate
-	GetAppControllerTemplate() *entities.GeneralTemplate
-	GetInteractorTemplate(string) *entities.GeneralTemplate
-	GetModelTemplate(string) *entities.GeneralTemplate
-	GetEntityTemplate(string) *entities.GeneralTemplate
-	GetRegistryTemplate() *entities.GeneralTemplate
-	GetRegistryControllerTemplate(string) *entities.GeneralTemplate
-	GetModTemplate() *entities.GeneralTemplate
+	GetControllerTemplate(string) *entities.Template
+	GetAppControllerTemplate() *entities.Template
+	GetInteractorTemplate(string) *entities.Template
+	GetRepositoryTemplate(string) *entities.Template
+	GetEntityTemplate(string) *entities.Template
+	GetRegistryTemplate() *entities.Template
+	GetRegistryControllerTemplate(string) *entities.Template
+	GetModTemplate() *entities.Template
 	SetProjectName(string)
 }

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+mkdir -p cover 
+if ! command -v gotest &> /dev/null
+then
+    COMMAND="go test"
+else
+    # https://github.com/rakyll/gotest
+    COMMAND="gotest"
+fi
+echo "COMMAND"
+echo ${COMMAND}
+${COMMAND} ./... -v -cover -coverprofile=cover/cov_general.out

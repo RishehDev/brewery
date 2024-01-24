@@ -12,4 +12,5 @@ var createCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(createCmd)
+	createCmd.PersistentFlags().StringP("name", "n", "myProject", "Name of the project")
 }

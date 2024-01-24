@@ -14,8 +14,8 @@ func NewRegistry() Registry {
 
 func (r *registry) NewAppController() controllers.AppController {
 	return controllers.AppController{
-		Project: r.NewProjectController(),
-		Entity:  r.NewEntityController(),
-		Interactor: r.NewInteractorController()
+		Project:    r.NewProjectController(),
+		Entity:     r.NewEntityController(),
+		Interactor: r.NewInteractorController(),
 	}
 }

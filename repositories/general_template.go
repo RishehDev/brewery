@@ -4,24 +4,27 @@ import (
 	"brewery/entities"
 	"brewery/usecases/repositories"
 	"runtime"
-	"unicode"
 )
 
+// generalTemplate this struct is used for create specificly general template
 type generalTemplate struct {
-	projectName string
+	*entities.Template
 }
 
+// NewGeneralTemplate is the contructor for generalTemplate
 func NewGeneralTemplate() repositories.GeneralTemplate {
-	return &generalTemplate{}
+	return &generalTemplate{
+		Template: &entities.Template{},
+	}
 }
 
-func (f generalTemplate) GetControllerTemplate(name string) *entities.GeneralTemplate {
-	generalTemplate := &entities.GeneralTemplate{}
-	f.setNames(generalTemplate, name)
-	generalTemplate.TemplateType = "Controller"
-	generalTemplate.Path = f.projectName + "/controllers/" + generalTemplate.LowerName + "_controller.go"
-	generalTemplate.ProjectName = f.projectName
-	generalTemplate.Template = `package controllers
+// GetControllerTemplate return the info for create a simple controller
+// The input is the name of the controller
+func (f generalTemplate) GetControllerTemplate(name string) *entities.Template {
+	f.SetNames(name)
+	f.TemplateType = "Controller"
+	f.Path = f.ProjectName + "/controllers/" + f.LowerName + "_controller.go"
+	f.Template.Template = `package controllers
 
 type {{.UpperName}}Controller interface {
 	MyMethod() error
@@ -37,31 +40,30 @@ func (a *{{.LowerName}}Controller) MyMethod() error {
 	return nil
 }`
 
-	return generalTemplate
+	return f.Template
 }
 
-func (f generalTemplate) GetAppControllerTemplate() *entities.GeneralTemplate {
-	generalTemplate := entities.GeneralTemplate{}
-	generalTemplate.TemplateType = "AppController"
-	generalTemplate.Path = f.projectName + "/controllers/app_controller.go"
-	generalTemplate.ProjectName = f.projectName
-	generalTemplate.Template = `package controllers
+// GetAppControllerTemplate return the template for the App controller
+func (f generalTemplate) GetAppControllerTemplate() *entities.Template {
+	f.TemplateType = "AppController"
+	f.Path = f.ProjectName + "/controllers/app_controller.go"
+	f.Template.Template = `package controllers
 
 type AppController struct {
 	Index interface {
 		IndexController
 	}
 }`
-	return &generalTemplate
+	return f.Template
 }
 
-func (f generalTemplate) GetInteractorTemplate(name string) *entities.GeneralTemplate {
-	generalTemplate := &entities.GeneralTemplate{}
-	f.setNames(generalTemplate, name)
-	generalTemplate.TemplateType = "Interactor"
-	generalTemplate.Path = f.projectName + "/usecases/interactors/" + generalTemplate.LowerName + "_interactor.go"
-	generalTemplate.ProjectName = f.projectName
-	generalTemplate.Template = `package interactors
+// GetInteractorTemplate return the info for create an interactor
+// The input is the name of the interactor
+func (f generalTemplate) GetInteractorTemplate(name string) *entities.Template {
+	f.SetNames(name)
+	f.TemplateType = "Interactor"
+	f.Path = f.ProjectName + "/usecases/interactors/" + f.LowerName + "_interactor.go"
+	f.Template.Template = `package interactors
 
 type {{.UpperName}}Interactor interface {
 	MyMethod() error
@@ -76,10 +78,12 @@ func New{{.UpperName}}Interactor() {{.UpperName}}Interactor {
 func (a *{{.LowerName}}Interactor) MyMethod() error {
 	return nil
 }`
-	return generalTemplate
+	return f.Template
 }
 
-func (f generalTemplate) GetModelTemplate(name string) *entities.GeneralTemplate {
+// GetRepositoryTemplate return the info for create a repository
+// The input is the name of the repository
+func (f generalTemplate) GetRepositoryTemplate(name string) *entities.Template {
 	return nil
 }
 
@@ -102,12 +106,11 @@ func (f generalTemplate) GetEntityTemplate(name string) *entities.GeneralTemplat
 	return generalTemplate
 }
 
-func (f generalTemplate) GetRegistryTemplate() *entities.GeneralTemplate {
-	generalTemplate := entities.GeneralTemplate{}
-	generalTemplate.TemplateType = "Registry"
-	generalTemplate.Path = f.projectName + "/registry/registry.go"
-	generalTemplate.ProjectName = f.projectName
-	generalTemplate.Template = `package registry
+// GetRegistryTemplate return the template for the registry
+func (f generalTemplate) GetRegistryTemplate() *entities.Template {
+	f.TemplateType = "Registry"
+	f.Path = f.ProjectName + "/registry/registry.go"
+	f.Template.Template = `package registry
 
 import "{{.ProjectName}}/controllers"
 
@@ -126,16 +129,16 @@ func (r *registry) NewAppController() controllers.AppController {
 		Index: r.NewIndexController(),
 	}
 }`
-	return &generalTemplate
+	return f.Template
 }
 
-func (f generalTemplate) GetRegistryControllerTemplate(name string) *entities.GeneralTemplate {
-	generalTemplate := &entities.GeneralTemplate{}
-	f.setNames(generalTemplate, name)
-	generalTemplate.TemplateType = "RegistryController"
-	generalTemplate.Path = f.projectName + "/registry/" + generalTemplate.LowerName + "_registry.go"
-	generalTemplate.ProjectName = f.projectName
-	generalTemplate.Template = `package registry
+// GetRegistryControllerTemplate return the info for create an interactor
+// The input is the name of the controller and registry controller
+func (f generalTemplate) GetRegistryControllerTemplate(name string) *entities.Template {
+	f.SetNames(name)
+	f.TemplateType = "RegistryController"
+	f.Path = f.ProjectName + "/registry/" + f.LowerName + "_registry.go"
+	f.Template.Template = `package registry
 
 import (
 	"{{.ProjectName}}/controllers"
@@ -144,32 +147,19 @@ import (
 func (r *registry) New{{.UpperName}}Controller() controllers.{{.UpperName}}Controller {
 	return controllers.New{{.UpperName}}Controller()
 }`
-	return generalTemplate
+	return f.Template
 }
 
-func (f generalTemplate) GetModTemplate() *entities.GeneralTemplate {
-	generalTemplate := &entities.GeneralTemplate{}
-	generalTemplate.TemplateType = "GoMod"
-	generalTemplate.Path = f.projectName + "/go.mod"
-	generalTemplate.ProjectName = f.projectName
+func (f generalTemplate) GetModTemplate() *entities.Template {
+	f.TemplateType = "GoMod"
+	f.Path = f.ProjectName + "/go.mod"
 
 	version := runtime.Version()
 	v := make(map[string]string)
 	v["version"] = version[2:]
-	generalTemplate.Data = v
-	generalTemplate.Template = `module {{.ProjectName}}
+	f.Data = v
+	f.Template.Template = `module {{.ProjectName}}
 	{{ $data := .Data }}
 go {{ $data.version }}`
-	return generalTemplate
-}
-
-func (f *generalTemplate) SetProjectName(projectName string) {
-	f.projectName = projectName
-}
-
-func (f *generalTemplate) setNames(template *entities.GeneralTemplate, name string) {
-	runes := []rune(name)
-	runes[0] = unicode.ToUpper(runes[0])
-	template.LowerName = name
-	template.UpperName = string(runes)
+	return f.Template
 }

@@ -54,15 +54,52 @@ func (a projectInteractor) CreateWebService(name string) error {
 	}
 	a.generalTemplate.SetProjectName(name)
 	a.httpTemplate.SetProjectName(name)
-	a.createFile(a.generalTemplate.GetAppControllerTemplate())
-	a.createFile(a.generalTemplate.GetInteractorTemplate("index"))
-	a.createFile(a.generalTemplate.GetRegistryTemplate())
-	a.createFile(a.generalTemplate.GetRegistryControllerTemplate("index"))
-	a.createFile(a.generalTemplate.GetModTemplate())
-	a.createFile(a.httpTemplate.GetRoutesTemplate())
-	a.createFile(a.httpTemplate.GetControllerTemplate("index"))
-	a.createFile(a.httpTemplate.GetMainTemplate())
+	err = a.createFile(a.generalTemplate.GetAppControllerTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetInteractorTemplate("index"))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetRegistryTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetRegistryControllerTemplate("index"))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetModTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.httpTemplate.GetRoutesTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.httpTemplate.GetControllerTemplate("index"))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.httpTemplate.GetMainTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
 	a.createFile(a.generalTemplate.GetEntityTemplate("entity", false))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
 
 	return nil
 }

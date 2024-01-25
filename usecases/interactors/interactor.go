@@ -8,21 +8,21 @@ import (
 	"text/template"
 )
 
-type UsecaseInteractor interface {
-	CreateNewUseCase(string, string) error
+type InteractorInteractor interface {
+	CreateNewInteractor(string, string) error
 }
 
-type usecaseInteractor struct {
+type interactorInteractor struct {
 	repository repositories.GeneralTemplate
 }
 
-func NewUsecaseInteractor(repository repositories.GeneralTemplate) UsecaseInteractor {
-	return &usecaseInteractor{
+func NewUsecaseInteractor(repository repositories.GeneralTemplate) InteractorInteractor {
+	return &interactorInteractor{
 		repository: repository,
 	}
 }
 
-func (ui usecaseInteractor) CreateNewUseCase(name string, project string) error {
+func (ui interactorInteractor) CreateNewInteractor(name string, project string) error {
 	ui.repository.SetProjectName(name)
 	usecaseTemplate := ui.repository.GetInteractorTemplate(name)
 	file, err := os.Create(usecaseTemplate.Path)

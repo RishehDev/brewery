@@ -8,8 +8,8 @@ var interactorCmd = &cobra.Command{
 	Use:   "interactor",
 	Short: "Creates new Interactor",
 	Run: func(cmd *cobra.Command, args []string) {
-		cmd.Flags().GetString("interactorName")
-		//controller.Entity.CreateNewEntity(name)
+		interactorName, _ := cmd.Flags().GetString("interactorName")
+		controller.Interactor.CreateNewInteractor(interactorName)
 	},
 }
 

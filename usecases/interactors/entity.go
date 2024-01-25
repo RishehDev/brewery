@@ -9,22 +9,21 @@ import (
 )
 
 type EntityInteractor interface {
-	CreateNewEntity(string, string) error
+	CreateNewEntity(string, bool) error
 }
 
 type entityInteractor struct {
-	template repositories.GeneralTemplate
+	repository repositories.GeneralTemplate
 }
 
-func NewEntityInteractor(template repositories.GeneralTemplate) EntityInteractor {
+func NewEntityInteractor(repository repositories.GeneralTemplate) EntityInteractor {
 	return &entityInteractor{
-		template: template,
+		repository: repository,
 	}
 }
 
-func (ei entityInteractor) CreateNewEntity(name string, project string) error {
-	ei.template.SetProjectName(project)
-	entityTemplate := ei.template.GetEntityTemplate(name)
+func (interactor entityInteractor) CreateNewEntity(name string, gorm bool) error {
+	entityTemplate := interactor.repository.GetEntityTemplate(name, gorm)
 	file, err := os.Create(entityTemplate.Path)
 
 	if err != nil {
@@ -33,7 +32,13 @@ func (ei entityInteractor) CreateNewEntity(name string, project string) error {
 
 	defer file.Close()
 
-	tmpl, _ := template.New(entityTemplate.TemplateType).ParseFiles(entityTemplate.Template)
+	tmpl, err := template.New(entityTemplate.TemplateType).Parse(entityTemplate.Template)
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
 	err = tmpl.Execute(file, entityTemplate)
 
 	if err != nil {

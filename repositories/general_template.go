@@ -87,23 +87,48 @@ func (f generalTemplate) GetRepositoryTemplate(name string) *entities.Template {
 	return nil
 }
 
-func (f generalTemplate) GetEntityTemplate(name string) *entities.GeneralTemplate {
-	generalTemplate := &entities.GeneralTemplate{}
-	f.setNames(generalTemplate, name)
-	generalTemplate.TemplateType = "entity"
-	generalTemplate.Path = f.projectName + "/usecases/interactors/" + generalTemplate.LowerName + "_entity.go"
-	generalTemplate.ProjectName = f.projectName
-	generalTemplate.Template = `package entities
+func (f generalTemplate) GetEntityTemplate(name string, gorm bool) *entities.Template {
+	f.SetNames(name)
+	f.TemplateType = "entity"
 
-		type {{.UpperName}} struct {
-				ID        uint        
-				CreatedAt time.Time
-				UpdatedAt time.Time
-				DeletedAt gorm.DeletedAt 
-		}
+	if f.Path != "" {
+		f.Path = f.ProjectName + "/entities/" + f.LowerName + ".go"
+	} else {
+		f.Path = "entities/" + f.LowerName + ".go"
+	}
+
+	if gorm {
+		f.Template.Template = `
+package entities
+
+import (
+	"gorm.io/gorm"
+	"time"
+)
+
+type {{ .UpperName }} struct {
+	//ID, CreatedAt, UpdatedAt and DeletedAt inserted from gorm model
+	gorm.Model
+}
 	`
+	} else {
+		f.Template.Template = `
+package entities
 
-	return generalTemplate
+import (
+	"time"
+)
+
+type {{ .UpperName }} struct {
+	ID        uint
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt string
+}
+`
+	}
+
+	return f.Template
 }
 
 // GetRegistryTemplate return the template for the registry

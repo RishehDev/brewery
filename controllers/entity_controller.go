@@ -1,9 +1,11 @@
 package controllers
 
-import "brewery/usecases/interactors"
+import (
+	"brewery/usecases/interactors"
+)
 
 type EntityController interface {
-	CreateNewEntity(string, string) error
+	CreateNewEntity(string, bool) error
 }
 
 type entityController struct {
@@ -16,6 +18,6 @@ func NewEntityController(entityInteractor interactors.EntityInteractor) EntityCo
 	}
 }
 
-func (ec *entityController) CreateNewEntity(name string, project string) error {
-	return ec.entityInteractor.CreateNewEntity(name, project)
+func (ec *entityController) CreateNewEntity(name string, gorm bool) error {
+	return ec.entityInteractor.CreateNewEntity(name, gorm)
 }

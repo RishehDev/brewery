@@ -8,7 +8,7 @@ type GeneralTemplate interface {
 	GetAppControllerTemplate() *entities.Template
 	GetInteractorTemplate(string) *entities.Template
 	GetRepositoryTemplate(string) *entities.Template
-	GetEntityTemplate(string) *entities.Template
+	GetEntityTemplate(string, bool) *entities.Template
 	GetRegistryTemplate() *entities.Template
 	GetRegistryControllerTemplate(string) *entities.Template
 	GetModTemplate() *entities.Template

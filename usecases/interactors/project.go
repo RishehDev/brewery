@@ -62,7 +62,7 @@ func (a projectInteractor) CreateWebService(name string) error {
 	a.createFile(a.httpTemplate.GetRoutesTemplate())
 	a.createFile(a.httpTemplate.GetControllerTemplate("index"))
 	a.createFile(a.httpTemplate.GetMainTemplate())
-	a.createFile(a.generalTemplate.GetEntityTemplate("entity"))
+	a.createFile(a.generalTemplate.GetEntityTemplate("entity", false))
 
 	return nil
 }
@@ -87,6 +87,7 @@ func (a projectInteractor) createFolders(names []string) error {
 // The input is a struct template located in entities
 func (a projectInteractor) createFile(templateStruct *entities.Template) error {
 	newFile, err := os.Create(templateStruct.Path)
+
 	defer newFile.Close()
 	if err != nil {
 		fmt.Println(err)

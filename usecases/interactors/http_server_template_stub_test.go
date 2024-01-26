@@ -32,7 +32,7 @@ func NewHttpServerTemplate(controller bool, main bool, route bool) repositories.
 
 // GetControllerTemplate return the info template needed for create a controller for http access
 // The input is the name of the controller
-func (h httpServerTemplate) GetControllerTemplate(name string) *entities.Template {
+func (h httpServerTemplate) GetHTTPControllerTemplate(name string) *entities.Template {
 	if h.Response.Controller {
 		h.SetNames(name)
 		h.TemplateType = "Controller"

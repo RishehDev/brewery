@@ -83,7 +83,7 @@ func (a projectInteractor) CreateWebService(name string) error {
 		log.Println(err)
 		return err
 	}
-	err = a.createFile(a.httpTemplate.GetControllerTemplate("index"))
+	err = a.createFile(a.httpTemplate.GetHTTPControllerTemplate("index"))
 	if err != nil {
 		log.Println(err)
 		return err

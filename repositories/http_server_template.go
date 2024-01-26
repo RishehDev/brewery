@@ -19,7 +19,7 @@ func NewHttpServerTemplate() repositories.HTTPServerTemplate {
 
 // GetControllerTemplate return the info template needed for create a controller for http access
 // The input is the name of the controller
-func (h httpServerTemplate) GetControllerTemplate(name string) *entities.Template {
+func (h httpServerTemplate) GetHTTPControllerTemplate(name string) *entities.Template {
 	h.SetNames(name)
 	h.TemplateType = "Controller"
 	h.Path = h.ProjectName + "/controllers/" + h.LowerName + "_controller.go"
@@ -54,7 +54,7 @@ func (a *indexController) MyMethod(w http.ResponseWriter, r *http.Request) {
 
 // GetRoutesTemplate return the template inf that contain the root route and init the http server
 func (h httpServerTemplate) GetRoutesTemplate() *entities.Template {
-	h.TemplateType = "Controller"
+	h.TemplateType = "Routes"
 	h.Path = h.ProjectName + "/infrastructure/http/server.go"
 	h.Template.Template = `package http
 
@@ -74,7 +74,7 @@ func StartServer(controllers controllers.AppController) {
 
 // GetMainTemplate return the info template needed for create the main.go for an http access
 func (h httpServerTemplate) GetMainTemplate() *entities.Template {
-	h.TemplateType = "Controller"
+	h.TemplateType = "Main"
 	h.Path = h.ProjectName + "/main.go"
 	h.Template.Template = `package main
 

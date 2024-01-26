@@ -7,13 +7,13 @@ import (
 
 // httpServerTemplate this struct is used for create specificly http templates
 type httpServerTemplate struct {
-	*entities.Template
+	entities.Template
 }
 
 // NewHttpServerTemplate is the constructor for httpServerTemplate
 func NewHttpServerTemplate() repositories.HTTPServerTemplate {
 	return &httpServerTemplate{
-		Template: &entities.Template{},
+		Template: entities.Template{},
 	}
 }
 
@@ -49,7 +49,7 @@ func (a *indexController) MyMethod(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(html))
 }`
 
-	return h.Template
+	return &h.Template
 }
 
 // GetRoutesTemplate return the template inf that contain the root route and init the http server
@@ -69,7 +69,7 @@ func StartServer(controllers controllers.AppController) {
 	http.ListenAndServe(":8080", nil)
 
 }`
-	return h.Template
+	return &h.Template
 }
 
 // GetMainTemplate return the info template needed for create the main.go for an http access
@@ -88,5 +88,5 @@ func main() {
 	controllers := registry.NewAppController()
 	http.StartServer(controllers)
 }`
-	return h.Template
+	return &h.Template
 }

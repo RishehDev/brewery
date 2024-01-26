@@ -8,13 +8,13 @@ import (
 
 // generalTemplate this struct is used for create specificly general template
 type generalTemplate struct {
-	*entities.Template
+	entities.Template
 }
 
 // NewGeneralTemplate is the contructor for generalTemplate
 func NewGeneralTemplate() repositories.GeneralTemplate {
 	return &generalTemplate{
-		Template: &entities.Template{},
+		Template: entities.Template{},
 	}
 }
 
@@ -40,7 +40,7 @@ func (a *{{.LowerName}}Controller) MyMethod() error {
 	return nil
 }`
 
-	return f.Template
+	return &f.Template
 }
 
 // GetAppControllerTemplate return the template for the App controller
@@ -54,7 +54,7 @@ type AppController struct {
 		IndexController
 	}
 }`
-	return f.Template
+	return &f.Template
 }
 
 // GetInteractorTemplate return the info for create an interactor
@@ -78,7 +78,7 @@ func New{{.UpperName}}Interactor() {{.UpperName}}Interactor {
 func (a *{{.LowerName}}Interactor) MyMethod() error {
 	return nil
 }`
-	return f.Template
+	return &f.Template
 }
 
 // GetRepositoryTemplate return the info for create a repository
@@ -116,7 +116,7 @@ func (r *registry) NewAppController() controllers.AppController {
 		Index: r.NewIndexController(),
 	}
 }`
-	return f.Template
+	return &f.Template
 }
 
 // GetRegistryControllerTemplate return the info for create an interactor
@@ -134,7 +134,7 @@ import (
 func (r *registry) New{{.UpperName}}Controller() controllers.{{.UpperName}}Controller {
 	return controllers.New{{.UpperName}}Controller()
 }`
-	return f.Template
+	return &f.Template
 }
 
 func (f generalTemplate) GetModTemplate() *entities.Template {
@@ -148,5 +148,5 @@ func (f generalTemplate) GetModTemplate() *entities.Template {
 	f.Template.Template = `module {{.ProjectName}}
 	{{ $data := .Data }}
 go {{ $data.version }}`
-	return f.Template
+	return &f.Template
 }

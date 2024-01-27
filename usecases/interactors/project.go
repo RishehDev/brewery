@@ -4,14 +4,17 @@ import (
 	"brewery/entities"
 	"brewery/usecases/repositories"
 	"errors"
+	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"text/template"
 )
 
 // ProjectInteractor is the interface used by the controllers for comunicate with projectInteractor and new posible versions
 type ProjectInteractor interface {
 	CreateWebService(name string) error
+	CreateCliApplication(name string) error
 }
 
 // projectInteractor contain all the repositories that this interactor needed.
@@ -19,34 +22,30 @@ type ProjectInteractor interface {
 type projectInteractor struct {
 	generalTemplate repositories.GeneralTemplate
 	httpTemplate    repositories.HTTPServerTemplate
+	cliTemplate     repositories.CliAppTemplate
 }
 
 // NewProjectInteractor is the constructor for NewProjectInteractor
 // The input are the repos that the struct need
 // The return is an interface, ProjectInteractor in this case
-func NewProjectInteractor(repo repositories.GeneralTemplate, httpRepo repositories.HTTPServerTemplate) ProjectInteractor {
+func NewProjectInteractor(
+	repo repositories.GeneralTemplate,
+	httpRepo repositories.HTTPServerTemplate,
+	cliRepo repositories.CliAppTemplate,
+) ProjectInteractor {
 	return &projectInteractor{
 		generalTemplate: repo,
 		httpTemplate:    httpRepo,
+		cliTemplate:     cliRepo,
 	}
 }
 
 // CreateWebService create all the structure for a simple web services
 func (a projectInteractor) CreateWebService(name string) error {
 	folders := []string{
-		name,
-		name + "/registry",
-		name + "/controllers",
-		name + "/usecases",
-		name + "/repositories",
-		name + "/entities",
-		name + "/infrastructure",
-		name + "/usecases/interactors",
-		name + "/usecases/repositories",
-		name + "/infrastructure",
 		name + "/infrastructure/http",
 	}
-	err := a.createFolders(folders)
+	err := a.createFolders(name, folders)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -97,10 +96,100 @@ func (a projectInteractor) CreateWebService(name string) error {
 	return nil
 }
 
+// CreateCliApp create all the structure for a cli application
+func (a projectInteractor) CreateCliApplication(name string) error {
+	folders := []string{
+		name + "/infrastructure/cmd",
+	}
+	err := a.createFolders(name, folders)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	a.generalTemplate.SetProjectName(name)
+	a.cliTemplate.SetProjectName(name)
+	err = a.createFile(a.generalTemplate.GetAppControllerTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetInteractorTemplate("index"))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetRegistryTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetRegistryControllerTemplate("index"))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetModTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.cliTemplate.GetCmdTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.cliTemplate.GetCmdFirstTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.cliTemplate.GetCliControllerTemplate("index"))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.cliTemplate.GetCliMainTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	cmd := exec.Command("go", "mod", "tidy")
+	cmd.Dir = name
+	if err := cmd.Run(); err != nil {
+		log.Println(err)
+		return err
+	}
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	out, err := cmd.Output()
+	fmt.Println(out)
+
+	return nil
+}
+
 // createFolders a method for create all the folders
 // The input is an slice of strings with all the path
-func (a projectInteractor) createFolders(names []string) error {
-	for _, name := range names {
+func (a projectInteractor) createFolders(name string, specificFolders []string) error {
+	folders := []string{
+		name,
+		name + "/registry",
+		name + "/controllers",
+		name + "/usecases",
+		name + "/repositories",
+		name + "/entities",
+		name + "/infrastructure",
+		name + "/usecases/interactors",
+		name + "/usecases/repositories",
+		name + "/infrastructure",
+		name + "/infrastructure/http",
+	}
+
+	joinFolders := append(folders, specificFolders...)
+
+	for _, name := range joinFolders {
 		if _, err := os.Stat(name); errors.Is(err, os.ErrNotExist) {
 			err := os.Mkdir(name, os.ModePerm)
 			if err != nil {

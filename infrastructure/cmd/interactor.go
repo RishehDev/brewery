@@ -15,4 +15,5 @@ var interactorCmd = &cobra.Command{
 
 func init() {
 	createCmd.AddCommand(interactorCmd)
+	interactorCmd.Flags().StringP("interactorName", "i", "interactorName", "Name of the new interactor")
 }

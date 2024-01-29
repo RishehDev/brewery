@@ -9,7 +9,7 @@ import (
 )
 
 type InteractorInteractor interface {
-	CreateNewInteractor(string, string) error
+	CreateNewInteractor(string) error
 }
 
 type interactorInteractor struct {
@@ -22,10 +22,9 @@ func NewUsecaseInteractor(repository repositories.GeneralTemplate) InteractorInt
 	}
 }
 
-func (ui interactorInteractor) CreateNewInteractor(name string, project string) error {
-	ui.repository.SetProjectName(name)
-	usecaseTemplate := ui.repository.GetInteractorTemplate(name)
-	file, err := os.Create(usecaseTemplate.Path)
+func (ui interactorInteractor) CreateNewInteractor(name string) error {
+	interactorTemplate := ui.repository.GetInteractorTemplate(name)
+	file, err := os.Create(interactorTemplate.Path)
 
 	if err != nil {
 		return err
@@ -33,8 +32,8 @@ func (ui interactorInteractor) CreateNewInteractor(name string, project string) 
 
 	defer file.Close()
 
-	tmpl, _ := template.New(usecaseTemplate.TemplateType).ParseFiles(usecaseTemplate.Template)
-	err = tmpl.Execute(file, usecaseTemplate)
+	tmpl, _ := template.New(interactorTemplate.TemplateType).Parse(interactorTemplate.Template)
+	err = tmpl.Execute(file, interactorTemplate)
 
 	//Needs to Create repositories as well
 
@@ -43,6 +42,6 @@ func (ui interactorInteractor) CreateNewInteractor(name string, project string) 
 		return err
 	}
 
-	log.Printf("The file %s has been created\n", usecaseTemplate.Path)
+	log.Printf("The file %s has been created\n", interactorTemplate.Path)
 	return nil
 }

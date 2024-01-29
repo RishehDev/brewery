@@ -7,10 +7,10 @@ type InteractorController interface {
 }
 
 type interactorController struct {
-	interactor interactors.UsecaseInteractor
+	interactor interactors.InteractorInteractor
 }
 
-func NewInteractorController(interactor interactors.UsecaseInteractor) InteractorController {
+func NewInteractorController(interactor interactors.InteractorInteractor) InteractorController {
 	return &interactorController{
 		interactor: interactor,
 	}

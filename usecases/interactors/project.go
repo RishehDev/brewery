@@ -52,27 +52,7 @@ func (a projectInteractor) CreateWebService(name string) error {
 	}
 	a.generalTemplate.SetProjectName(name)
 	a.httpTemplate.SetProjectName(name)
-	err = a.createFile(a.generalTemplate.GetAppControllerTemplate())
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = a.createFile(a.generalTemplate.GetInteractorTemplate("index"))
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = a.createFile(a.generalTemplate.GetRegistryTemplate())
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = a.createFile(a.generalTemplate.GetRegistryControllerTemplate("index"))
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = a.createFile(a.generalTemplate.GetModTemplate())
+	err = a.createGeneralFiles(name)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -114,27 +94,7 @@ func (a projectInteractor) CreateCliApplication(name string) error {
 	}
 	a.generalTemplate.SetProjectName(name)
 	a.cliTemplate.SetProjectName(name)
-	err = a.createFile(a.generalTemplate.GetAppControllerTemplate())
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = a.createFile(a.generalTemplate.GetInteractorTemplate("index"))
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = a.createFile(a.generalTemplate.GetRegistryTemplate())
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = a.createFile(a.generalTemplate.GetRegistryControllerTemplate("index"))
-	if err != nil {
-		log.Println(err)
-		return err
-	}
-	err = a.createFile(a.generalTemplate.GetModTemplate())
+	err = a.createGeneralFiles(name)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -204,6 +164,35 @@ func (a projectInteractor) createFolders(name string, specificFolders []string) 
 			}
 		}
 		log.Printf("The %s folder has been created\n", name)
+	}
+	return nil
+}
+
+func (a projectInteractor) createGeneralFiles(name string) error {
+	err := a.createFile(a.generalTemplate.GetAppControllerTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetInteractorTemplate("index"))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetRegistryTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetRegistryControllerTemplate("index"))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.generalTemplate.GetModTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
 	}
 	return nil
 }

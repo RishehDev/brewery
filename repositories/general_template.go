@@ -128,7 +128,7 @@ type {{ .UpperName }} struct {
 `
 	}
 
-	return f.Template
+	return &f.Template
 }
 
 // GetRegistryTemplate return the template for the registry

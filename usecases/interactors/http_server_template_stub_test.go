@@ -1,29 +1,43 @@
-package repositories
+package interactors_test
 
 import (
 	"brewery/entities"
 	"brewery/usecases/repositories"
 )
 
+type HTTPResponse struct {
+	Controller bool
+	Main       bool
+	Route      bool
+}
+
 // httpServerTemplate this struct is used for create specificly http templates
 type httpServerTemplate struct {
 	entities.Template
+	Response HTTPResponse
 }
 
 // NewHttpServerTemplate is the constructor for httpServerTemplate
-func NewHttpServerTemplate() repositories.HTTPServerTemplate {
+func NewHttpServerTemplate(controller bool, main bool, route bool) repositories.HTTPServerTemplate {
+	response := HTTPResponse{
+		Controller: controller,
+		Main:       main,
+		Route:      route,
+	}
 	return &httpServerTemplate{
 		Template: entities.Template{},
+		Response: response,
 	}
 }
 
 // GetControllerTemplate return the info template needed for create a controller for http access
 // The input is the name of the controller
 func (h httpServerTemplate) GetHTTPControllerTemplate(name string) *entities.Template {
-	h.SetNames(name)
-	h.TemplateType = "Controller"
-	h.Path = h.ProjectName + "/controllers/" + h.LowerName + "_controller.go"
-	h.Template.Template = `package controllers
+	if h.Response.Controller {
+		h.SetNames(name)
+		h.TemplateType = "Controller"
+		h.Path = h.ProjectName + "/controllers/" + h.LowerName + "_controller.go"
+		h.Template.Template = `package controllers
 
 import (
 	"net/http"
@@ -49,13 +63,17 @@ func (a *indexController) MyMethod(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte(html))
 }`
 
+	}
+
 	return &h.Template
 }
 
 // GetRoutesTemplate return the template inf that contain the root route and init the http server
 func (h httpServerTemplate) GetRoutesTemplate() *entities.Template {
-	h.TemplateType = "Routes"
-	h.Path = h.ProjectName + "/infrastructure/http/server.go"
+	if h.Response.Route {
+		h.Path = h.ProjectName + "/infrastructure/http/server.go"
+	}
+	h.TemplateType = "Controller"
 	h.Template.Template = `package http
 
 import (
@@ -74,9 +92,8 @@ func StartServer(controllers controllers.AppController) {
 
 // GetMainTemplate return the info template needed for create the main.go for an http access
 func (h httpServerTemplate) GetMainTemplate() *entities.Template {
-	h.TemplateType = "Main"
-	h.Path = h.ProjectName + "/main.go"
-	h.Template.Template = `package main
+	if h.Response.Main {
+		h.Template.Template = `package main
 
 import (
 	"{{.ProjectName}}/infrastructure/http"
@@ -88,5 +105,8 @@ func main() {
 	controllers := registry.NewAppController()
 	http.StartServer(controllers)
 }`
+		h.Path = h.ProjectName + "/main.go"
+	}
+	h.TemplateType = "Controller"
 	return &h.Template
 }

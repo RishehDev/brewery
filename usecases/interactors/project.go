@@ -4,7 +4,6 @@ import (
 	"brewery/entities"
 	"brewery/usecases/repositories"
 	"errors"
-	"fmt"
 	"log"
 	"os"
 	"text/template"
@@ -49,7 +48,7 @@ func (a projectInteractor) CreateWebService(name string) error {
 	}
 	err := a.createFolders(folders)
 	if err != nil {
-		fmt.Println(err)
+		log.Println(err)
 		return err
 	}
 	a.generalTemplate.SetProjectName(name)
@@ -84,7 +83,7 @@ func (a projectInteractor) CreateWebService(name string) error {
 		log.Println(err)
 		return err
 	}
-	err = a.createFile(a.httpTemplate.GetControllerTemplate("index"))
+	err = a.createFile(a.httpTemplate.GetHTTPControllerTemplate("index"))
 	if err != nil {
 		log.Println(err)
 		return err
@@ -124,22 +123,14 @@ func (a projectInteractor) createFolders(names []string) error {
 // The input is a struct template located in entities
 func (a projectInteractor) createFile(templateStruct *entities.Template) error {
 	newFile, err := os.Create(templateStruct.Path)
-
+	if err != nil {
+		newFile.Close()
+		log.Println(err)
+		return err
+	}
 	defer newFile.Close()
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	tmpl, err := template.New(templateStruct.TemplateType).Parse(templateStruct.Template)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
-	err = tmpl.Execute(newFile, templateStruct)
-	if err != nil {
-		fmt.Println(err)
-		return err
-	}
+	tmpl, _ := template.New(templateStruct.TemplateType).Parse(templateStruct.Template)
+	tmpl.Execute(newFile, templateStruct)
 	log.Printf("The file %s has been created\n", templateStruct.Path)
 	return nil
 }

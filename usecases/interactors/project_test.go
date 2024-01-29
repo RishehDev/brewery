@@ -32,3 +32,100 @@ func TestCreateWebService(t *testing.T) {
 
 	os.RemoveAll("myProject")
 }
+
+func TestCreateWebServiceFailed(t *testing.T) {
+	for scenario, fn := range map[string]func(t *testing.T){
+		"Controller file failed":         testCreateControllerFail,
+		"AppController file failed":      testCreateAppControllerFail,
+		"Interactor file failed":         testCreateInteractorFail,
+		"Registry file failed":           testCreateRegistryFail,
+		"RegistryController file failed": testCreateRegistryControllerFail,
+		"Mod file failed":                testCreateModFail,
+		"Route file failed":              testCreateRoutesFail,
+		"Main file failed":               testCreateMainFail,
+	} {
+		t.Run(scenario, func(t *testing.T) {
+			fn(t)
+		})
+	}
+}
+
+func testCreateControllerFail(t *testing.T) {
+	generalRepository := NewGeneralTemplate(true, true, true, true, true, true, true, true)
+	httpRepository := NewHttpServerTemplate(false, true, true)
+	interactor := interactors.NewProjectInteractor(generalRepository, httpRepository)
+	err := interactor.CreateWebService("test")
+	assert.NoFileExists(t, "test/controllers/index_controller.go")
+	assert.NotNil(t, err)
+	os.RemoveAll("test")
+}
+
+func testCreateAppControllerFail(t *testing.T) {
+	generalRepository := NewGeneralTemplate(true, false, true, true, true, true, true, true)
+	httpRepository := NewHttpServerTemplate(true, true, true)
+	interactor := interactors.NewProjectInteractor(generalRepository, httpRepository)
+	err := interactor.CreateWebService("test")
+	assert.NoFileExists(t, "test/controllers/app_controller.go")
+	assert.NotNil(t, err)
+	os.RemoveAll("test")
+}
+
+func testCreateInteractorFail(t *testing.T) {
+	generalRepository := NewGeneralTemplate(true, true, true, false, true, true, true, true)
+	httpRepository := NewHttpServerTemplate(true, true, true)
+	interactor := interactors.NewProjectInteractor(generalRepository, httpRepository)
+	err := interactor.CreateWebService("test")
+	assert.NoFileExists(t, "test/interactor/index_interactor.go")
+	assert.NotNil(t, err)
+	os.RemoveAll("test")
+}
+
+func testCreateRegistryFail(t *testing.T) {
+	generalRepository := NewGeneralTemplate(true, true, true, true, true, true, false, true)
+	httpRepository := NewHttpServerTemplate(true, true, true)
+	interactor := interactors.NewProjectInteractor(generalRepository, httpRepository)
+	err := interactor.CreateWebService("test")
+	assert.NoFileExists(t, "test/interactor/index_interactor.go")
+	assert.NotNil(t, err)
+	os.RemoveAll("test")
+}
+
+func testCreateRegistryControllerFail(t *testing.T) {
+	generalRepository := NewGeneralTemplate(true, true, true, true, true, false, true, true)
+	httpRepository := NewHttpServerTemplate(true, true, true)
+	interactor := interactors.NewProjectInteractor(generalRepository, httpRepository)
+	err := interactor.CreateWebService("test")
+	assert.NoFileExists(t, "test/registry/index_registry.go")
+	assert.NotNil(t, err)
+	os.RemoveAll("test")
+}
+
+func testCreateModFail(t *testing.T) {
+	generalRepository := NewGeneralTemplate(true, true, true, true, false, true, true, true)
+	httpRepository := NewHttpServerTemplate(true, true, true)
+	interactor := interactors.NewProjectInteractor(generalRepository, httpRepository)
+	err := interactor.CreateWebService("test")
+	assert.NoFileExists(t, "test/go.mod")
+	assert.NotNil(t, err)
+	os.RemoveAll("test")
+}
+
+func testCreateRoutesFail(t *testing.T) {
+	generalRepository := NewGeneralTemplate(true, true, true, true, true, true, true, true)
+	httpRepository := NewHttpServerTemplate(true, true, false)
+	interactor := interactors.NewProjectInteractor(generalRepository, httpRepository)
+	err := interactor.CreateWebService("test")
+	assert.NoFileExists(t, "test/infrastructure/http/server.go")
+	assert.NotNil(t, err)
+	os.RemoveAll("test")
+}
+
+func testCreateMainFail(t *testing.T) {
+	generalRepository := NewGeneralTemplate(true, true, true, true, true, true, true, true)
+	httpRepository := NewHttpServerTemplate(true, false, true)
+	interactor := interactors.NewProjectInteractor(generalRepository, httpRepository)
+	err := interactor.CreateWebService("test")
+	assert.NoFileExists(t, "test/main.go")
+	assert.NotNil(t, err)
+	os.RemoveAll("test")
+}

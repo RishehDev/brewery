@@ -165,7 +165,7 @@ func (a projectInteractor) CreateCliApplication(name string) error {
 		return err
 	}
 	out, err := cmd.Output()
-	fmt.Println(out)
+	fmt.Println(string(out))
 
 	return nil
 }

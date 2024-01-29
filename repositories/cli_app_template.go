@@ -79,7 +79,7 @@ func init() {
 }
 
 func (cAT cliAppTemplate) GetCmdFirstTemplate() *entities.Template {
-	cAT.TemplateType = "Cmd"
+	cAT.TemplateType = "CmdFirst"
 	cAT.Path = cAT.ProjectName + "/infrastructure/cmd/first.go"
 	cAT.Template.Template = `package cmd
 

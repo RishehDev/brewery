@@ -94,6 +94,12 @@ func (a projectInteractor) CreateWebService(name string) error {
 		return err
 	}
 
+	a.createFile(a.generalTemplate.GetEntityTemplate("entity", false))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
 	return nil
 }
 
@@ -119,6 +125,7 @@ func (a projectInteractor) createFile(templateStruct *entities.Template) error {
 	newFile, err := os.Create(templateStruct.Path)
 	if err != nil {
 		newFile.Close()
+		log.Println(templateStruct.ProjectName)
 		log.Println(err)
 		return err
 	}

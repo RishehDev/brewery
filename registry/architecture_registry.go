@@ -13,3 +13,17 @@ func (r *registry) NewProjectController() controllers.ProjectController {
 	)
 	return controllers.NewProjectController(projectInteractor)
 }
+
+func (r *registry) NewEntityController() controllers.EntityController {
+	entityInteractor := interactors.NewEntityInteractor(
+		repositories.NewGeneralTemplate(),
+	)
+	return controllers.NewEntityController(entityInteractor)
+}
+
+func (r *registry) NewInteractorController() controllers.InteractorController {
+	usecaseInteractor := interactors.NewUsecaseInteractor(
+		repositories.NewGeneralTemplate(),
+	)
+	return controllers.NewInteractorController(usecaseInteractor)
+}

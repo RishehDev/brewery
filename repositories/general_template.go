@@ -87,10 +87,48 @@ func (f generalTemplate) GetRepositoryTemplate(name string) *entities.Template {
 	return nil
 }
 
-// GetEntityTemplate return the info for create an entity
-// The input is the name of the entity
-func (f generalTemplate) GetEntityTemplate(name string) *entities.Template {
-	return nil
+func (f generalTemplate) GetEntityTemplate(name string, gorm bool) *entities.Template {
+	f.SetNames(name)
+	f.TemplateType = "entity"
+
+	if f.ProjectName != "" {
+		f.Path = f.ProjectName + "/entities/" + f.LowerName + ".go"
+	} else {
+		f.Path = "entities/" + f.LowerName + ".go"
+	}
+
+	if gorm {
+		f.Template.Template = `
+package entities
+
+import (
+	"gorm.io/gorm"
+	"time"
+)
+
+type {{ .UpperName }} struct {
+	//ID, CreatedAt, UpdatedAt and DeletedAt inserted from gorm model
+	gorm.Model
+}
+	`
+	} else {
+		f.Template.Template = `
+package entities
+
+import (
+	"time"
+)
+
+type {{ .UpperName }} struct {
+	ID        uint
+	CreatedAt string
+	UpdatedAt string
+	DeletedAt string
+}
+`
+	}
+
+	return &f.Template
 }
 
 // GetRegistryTemplate return the template for the registry

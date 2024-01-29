@@ -19,7 +19,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Build and Test
-        run: make test
+        run: make test-sonar
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

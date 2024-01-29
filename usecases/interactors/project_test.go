@@ -79,7 +79,7 @@ func TestCreateWebServiceFailed(t *testing.T) {
 
 func TestCreateCliApplicationFailed(t *testing.T) {
 	for scenario, fn := range map[string]func(t *testing.T){
-		"Controller file failed":         testCreateCliControllerFail,
+		//"Controller file failed":         testCreateCliControllerFail,
 		"AppController file failed":      testCreateAppControllerFail,
 		"Interactor file failed":         testCreateInteractorFail,
 		"Registry file failed":           testCreateRegistryFail,
@@ -183,7 +183,7 @@ func testCreateMainFail(t *testing.T) {
 	os.RemoveAll("test")
 }
 
-func testCreateCliControllerFail(t *testing.T) {
+func TestCreateCliControllerFail(t *testing.T) {
 	generalRepository := NewGeneralTemplate(true, true, true, true, true, true, true, true)
 	httpRepository := NewHttpServerTemplate(true, true, true)
 	cliRepository := NewCliAppTemplate(false, true, true, true)

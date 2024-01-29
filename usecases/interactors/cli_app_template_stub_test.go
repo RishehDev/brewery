@@ -32,7 +32,7 @@ func NewCliAppTemplate(controller bool, main bool, cmdFirst bool, cmd bool) repo
 
 // GetControllerTemplate return the info for create a simple controller
 // The input is the name of the controller
-func (cAT *cliAppTemplate) GetCliControllerTemplate(name string) *entities.Template {
+func (cAT cliAppTemplate) GetCliControllerTemplate(name string) *entities.Template {
 	if cAT.Response.Controller {
 		cAT.SetNames(name)
 		cAT.TemplateType = "Controller"
@@ -60,7 +60,7 @@ func (a *{{.LowerName}}Controller) MyMethod() error {
 	return &cAT.Template
 }
 
-func (cAT *cliAppTemplate) GetCmdTemplate() *entities.Template {
+func (cAT cliAppTemplate) GetCmdTemplate() *entities.Template {
 	if cAT.Response.Cmd {
 		cAT.TemplateType = "Cmd"
 		cAT.Path = cAT.ProjectName + "/infrastructure/cmd/root.go"
@@ -97,7 +97,7 @@ func init() {
 	return &cAT.Template
 }
 
-func (cAT *cliAppTemplate) GetCmdFirstTemplate() *entities.Template {
+func (cAT cliAppTemplate) GetCmdFirstTemplate() *entities.Template {
 	if cAT.Response.CmdFirst {
 		cAT.TemplateType = "Cmd"
 		cAT.Path = cAT.ProjectName + "/infrastructure/cmd/first.go"
@@ -124,8 +124,8 @@ func init() {
 	return &cAT.Template
 }
 
-func (cAT *cliAppTemplate) GetCliMainTemplate() *entities.Template {
-	if cAT.Response.Cmd {
+func (cAT cliAppTemplate) GetCliMainTemplate() *entities.Template {
+	if cAT.Response.Main {
 		cAT.TemplateType = "Main"
 		cAT.Path = cAT.ProjectName + "/main.go"
 		cAT.Template.Template = `package main

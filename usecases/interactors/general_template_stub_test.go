@@ -127,7 +127,7 @@ func (f generalTemplate) GetRepositoryTemplate(name string) *entities.Template {
 
 // GetEntityTemplate return the info for create an entity
 // The input is the name of the entity
-func (f generalTemplate) GetEntityTemplate(name string) *entities.Template {
+func (f generalTemplate) GetEntityTemplate(name string, gorm bool) *entities.Template {
 	return nil
 }
 

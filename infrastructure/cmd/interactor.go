@@ -9,7 +9,8 @@ var interactorCmd = &cobra.Command{
 	Short: "Creates new Interactor",
 	Run: func(cmd *cobra.Command, args []string) {
 		interactorName, _ := cmd.Flags().GetString("interactorName")
-		controller.Interactor.CreateNewInteractor(interactorName)
+		projectName, _ := cmd.Flags().GetString("name")
+		controller.Interactor.CreateNewInteractor(interactorName, projectName)
 	},
 }
 

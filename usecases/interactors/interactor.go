@@ -9,7 +9,7 @@ import (
 )
 
 type InteractorInteractor interface {
-	CreateNewInteractor(string) error
+	CreateNewInteractor(string, string) error
 }
 
 type interactorInteractor struct {
@@ -22,11 +22,13 @@ func NewUsecaseInteractor(repository repositories.GeneralTemplate) InteractorInt
 	}
 }
 
-func (ui interactorInteractor) CreateNewInteractor(name string) error {
-	interactorTemplate := ui.repository.GetInteractorTemplate(name)
+func (interactor interactorInteractor) CreateNewInteractor(name string, project string) error {
+	interactor.repository.SetProjectName(project)
+	interactorTemplate := interactor.repository.GetInteractorTemplate(name)
 	file, err := os.Create(interactorTemplate.Path)
 
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 

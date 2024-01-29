@@ -8,9 +8,10 @@ var entityCmd = &cobra.Command{
 	Use:   "entity",
 	Short: "Creates new Entity",
 	Run: func(cmd *cobra.Command, args []string) {
-		entityName, _ := cmd.Flags().GetString("name")
+		entityName, _ := cmd.Flags().GetString("entityName")
+		projectName, _ := cmd.Flags().GetString("name")
 		entityGorm, _ := cmd.Flags().GetBool("entityGorm")
-		controller.Entity.CreateNewEntity(entityName, entityGorm)
+		controller.Entity.CreateNewEntity(entityName, entityGorm, projectName)
 	},
 }
 

@@ -9,7 +9,7 @@ import (
 )
 
 type EntityInteractor interface {
-	CreateNewEntity(string, bool) error
+	CreateNewEntity(string, bool, string) error
 }
 
 type entityInteractor struct {
@@ -22,11 +22,13 @@ func NewEntityInteractor(repository repositories.GeneralTemplate) EntityInteract
 	}
 }
 
-func (interactor entityInteractor) CreateNewEntity(name string, gorm bool) error {
+func (interactor entityInteractor) CreateNewEntity(name string, gorm bool, project string) error {
+	interactor.repository.SetProjectName(project)
 	entityTemplate := interactor.repository.GetEntityTemplate(name, gorm)
 	file, err := os.Create(entityTemplate.Path)
 
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 

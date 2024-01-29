@@ -91,7 +91,7 @@ func (f generalTemplate) GetEntityTemplate(name string, gorm bool) *entities.Tem
 	f.SetNames(name)
 	f.TemplateType = "entity"
 
-	if f.Path != "" {
+	if f.ProjectName != "" {
 		f.Path = f.ProjectName + "/entities/" + f.LowerName + ".go"
 	} else {
 		f.Path = "entities/" + f.LowerName + ".go"

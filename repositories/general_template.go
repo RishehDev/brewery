@@ -115,10 +115,6 @@ type {{ .UpperName }} struct {
 		f.Template.Template = `
 package entities
 
-import (
-	"time"
-)
-
 type {{ .UpperName }} struct {
 	ID        uint
 	CreatedAt string

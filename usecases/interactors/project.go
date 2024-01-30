@@ -168,6 +168,8 @@ func (a projectInteractor) createFolders(name string, specificFolders []string) 
 	return nil
 }
 
+// createGeneralFiles Create all the general files used in a project
+// The input is the name of the project
 func (a projectInteractor) createGeneralFiles(name string) error {
 	err := a.createFile(a.generalTemplate.GetAppControllerTemplate())
 	if err != nil {

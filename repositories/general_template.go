@@ -175,6 +175,7 @@ func (r *registry) New{{.UpperName}}Controller() controllers.{{.UpperName}}Contr
 	return &f.Template
 }
 
+// GetModTemplate return the info for create a go.GetModTemplate
 func (f generalTemplate) GetModTemplate() *entities.Template {
 	f.TemplateType = "GoMod"
 	f.Path = f.ProjectName + "/go.mod"

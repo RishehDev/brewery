@@ -43,6 +43,7 @@ func (a *{{.LowerName}}Controller) MyMethod() error {
 	return &cAT.Template
 }
 
+// GetCmdTemplate return the info for create root cobra cmd
 func (cAT cliAppTemplate) GetCmdTemplate() *entities.Template {
 	cAT.TemplateType = "Cmd"
 	cAT.Path = cAT.ProjectName + "/infrastructure/cmd/root.go"
@@ -78,6 +79,7 @@ func init() {
 	return &cAT.Template
 }
 
+// GetCmdFirstTemplate return the info for create the first parameter of the cli app with cobra
 func (cAT cliAppTemplate) GetCmdFirstTemplate() *entities.Template {
 	cAT.TemplateType = "CmdFirst"
 	cAT.Path = cAT.ProjectName + "/infrastructure/cmd/first.go"
@@ -103,6 +105,7 @@ func init() {
 	return &cAT.Template
 }
 
+// GetCliMainTemplate return the info for create the main.go of a cli application
 func (cAT cliAppTemplate) GetCliMainTemplate() *entities.Template {
 	cAT.TemplateType = "Main"
 	cAT.Path = cAT.ProjectName + "/main.go"

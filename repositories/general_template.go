@@ -74,15 +74,40 @@ type {{.UpperName}}Interactor interface {
 	MyMethod() error
 }
 
-type {{.LowerName}}Interactor struct {}
+type {{.LowerName}}Interactor struct {
+	epository *repository.{{.UpperName}}Repository
+}
 
-func New{{.UpperName}}Interactor() {{.UpperName}}Interactor {
-	return &{{.LowerName}}Interactor{}
+func New{{.UpperName}}Interactor(repository *repository.{{.UpperName}}Repository) {{.UpperName}}Interactor {
+	return &{{.LowerName}}Interactor{
+		repository : repository
+	}
 }
 
 func (a *{{.LowerName}}Interactor) MyMethod() error {
 	return nil
 }`
+	return &f.Template
+}
+
+func (f generalTemplate) GetRepositoryInterfaceTemplate(name string) *entities.Template {
+	f.SetNames(name)
+
+	if f.ProjectName == "" {
+		f.Path = "usecases/repositories/" + f.LowerName + "_repository.go"
+	} else {
+		f.Path = f.ProjectName + "/usecases/repositories/" + f.LowerName + "_repository.go"
+	}
+
+	f.TemplateType = "RepositoryInterface"
+	f.Template.Template = `
+		package repositories
+
+		type {{.UpperName}}Repository interface {
+			MyMethod() error
+		}
+	`
+
 	return &f.Template
 }
 

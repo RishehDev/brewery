@@ -5,7 +5,7 @@ import (
 )
 
 type EntityController interface {
-	CreateNewEntity(string, bool, string) error
+	CreateNewEntity(string, bool) error
 }
 
 type entityController struct {
@@ -18,6 +18,6 @@ func NewEntityController(entityInteractor interactors.EntityInteractor) EntityCo
 	}
 }
 
-func (ec *entityController) CreateNewEntity(name string, gorm bool, project string) error {
-	return ec.entityInteractor.CreateNewEntity(name, gorm, project)
+func (ec *entityController) CreateNewEntity(name string, gorm bool) error {
+	return ec.entityInteractor.CreateNewEntity(name, gorm)
 }

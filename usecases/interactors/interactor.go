@@ -9,21 +9,31 @@ import (
 )
 
 type InteractorInteractor interface {
-	CreateNewInteractor(string, string) error
+	CreateNewInteractor(string) error
 }
 
 type interactorInteractor struct {
 	repository repositories.GeneralTemplate
 }
 
-func NewUsecaseInteractor(repository repositories.GeneralTemplate) InteractorInteractor {
+func NewInteractorInteractor(repository repositories.GeneralTemplate) InteractorInteractor {
 	return &interactorInteractor{
 		repository: repository,
 	}
 }
 
-func (interactor interactorInteractor) CreateNewInteractor(name string, project string) error {
-	interactor.repository.SetProjectName(project)
+func (interactor interactorInteractor) CreateNewInteractor(name string) error {
+
+	if _, err := os.Stat("go.mod"); os.IsNotExist(err) {
+		fmt.Println(PROJECT_NOT_FOUND)
+		return err
+	}
+
+	if _, err := os.Stat("usecases/interactors"); os.IsNotExist(err) {
+		os.MkdirAll("usecases/interactors", os.ModePerm)
+	}
+
+	interactor.repository.SetProjectName("")
 	interactorTemplate := interactor.repository.GetInteractorTemplate(name)
 	file, err := os.Create(interactorTemplate.Path)
 
@@ -36,8 +46,6 @@ func (interactor interactorInteractor) CreateNewInteractor(name string, project 
 
 	tmpl, _ := template.New(interactorTemplate.TemplateType).Parse(interactorTemplate.Template)
 	err = tmpl.Execute(file, interactorTemplate)
-
-	//Needs to Create repositories as well
 
 	if err != nil {
 		fmt.Println(err)

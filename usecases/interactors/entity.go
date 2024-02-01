@@ -5,11 +5,14 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"text/template"
 )
 
+var PROJECT_NOT_FOUND = "project not found"
+
 type EntityInteractor interface {
-	CreateNewEntity(string, bool, string) error
+	CreateNewEntity(string, bool) error
 }
 
 type entityInteractor struct {
@@ -22,13 +25,23 @@ func NewEntityInteractor(repository repositories.GeneralTemplate) EntityInteract
 	}
 }
 
-func (interactor entityInteractor) CreateNewEntity(name string, gorm bool, project string) error {
-	interactor.repository.SetProjectName(project)
+func (interactor entityInteractor) CreateNewEntity(name string, gorm bool) error {
+
+	if _, err := os.Stat("go.mod"); os.IsNotExist(err) {
+		fmt.Println(PROJECT_NOT_FOUND)
+		return err
+	}
+
+	if _, err := os.Stat("entities"); os.IsNotExist(err) {
+		os.Mkdir("entities", 0777)
+	}
+
+	interactor.repository.SetProjectName("")
 	entityTemplate := interactor.repository.GetEntityTemplate(name, gorm)
 	file, err := os.Create(entityTemplate.Path)
 
 	if err != nil {
-		log.Println(err)
+		fmt.Println(err)
 		return err
 	}
 
@@ -48,6 +61,16 @@ func (interactor entityInteractor) CreateNewEntity(name string, gorm bool, proje
 		return err
 	}
 
+	cmd := exec.Command("go", "mod", "tidy")
+	out, err := cmd.Output()
+
+	fmt.Println(out)
+
+	if err != nil {
+		fmt.Println("go mod tidy could not be executed, run manually")
+		fmt.Println(err)
+	}
 	log.Printf("The file %s has been created\n", entityTemplate.Path)
+	log.Printf("go mod tidy")
 	return nil
 }

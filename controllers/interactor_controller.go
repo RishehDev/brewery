@@ -3,7 +3,7 @@ package controllers
 import "brewery/usecases/interactors"
 
 type InteractorController interface {
-	CreateNewInteractor(string, string) error
+	CreateNewInteractor(string) error
 }
 
 type interactorController struct {
@@ -16,6 +16,6 @@ func NewInteractorController(interactor interactors.InteractorInteractor) Intera
 	}
 }
 
-func (ic interactorController) CreateNewInteractor(name string, project string) error {
-	return ic.interactor.CreateNewInteractor(name, project)
+func (ic interactorController) CreateNewInteractor(name string) error {
+	return ic.interactor.CreateNewInteractor(name)
 }

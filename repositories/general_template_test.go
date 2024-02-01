@@ -66,3 +66,45 @@ func TestGetModTemplate(t *testing.T) {
 	assert.Equal(t, "test/go.mod", mod.Path)
 	assert.IsType(t, &entities.Template{}, mod)
 }
+
+func TestGetInteractorRepositoryInterface(t *testing.T) {
+	template := values.generalRepository.GetRepositoryInterfaceTemplate("index")
+	assert.Equal(t, "test", template.ProjectName)
+	assert.Equal(t, "Index", template.UpperName)
+	assert.Equal(t, "index", template.LowerName)
+	assert.Equal(t, "RepositoryInterface", template.TemplateType)
+	assert.Equal(t, "test/usecases/repositories/index_repository.go", template.Path)
+	assert.IsType(t, &entities.Template{}, template)
+}
+
+func TestGetInteractorRepositoryInterfaceWithNoProject(t *testing.T) {
+	values.generalRepository.SetProjectName("")
+	template := values.generalRepository.GetRepositoryInterfaceTemplate("index")
+	assert.Equal(t, "", template.ProjectName)
+	assert.Equal(t, "Index", template.UpperName)
+	assert.Equal(t, "index", template.LowerName)
+	assert.Equal(t, "RepositoryInterface", template.TemplateType)
+	assert.Equal(t, "usecases/repositories/index_repository.go", template.Path)
+	assert.IsType(t, &entities.Template{}, template)
+}
+
+func TestGetEntityTemplate(t *testing.T) {
+	template := values.generalRepository.GetEntityTemplate("index", false)
+	assert.Equal(t, "test", template.ProjectName)
+	assert.Equal(t, "Index", template.UpperName)
+	assert.Equal(t, "index", template.LowerName)
+	assert.Equal(t, "entity", template.TemplateType)
+	assert.Equal(t, "test/entities/index.go", template.Path)
+	assert.IsType(t, &entities.Template{}, template)
+}
+
+func TestGetEntityTemplateWithnoProject(t *testing.T) {
+	values.generalRepository.SetProjectName("")
+	template := values.generalRepository.GetEntityTemplate("index", false)
+	assert.Equal(t, "", template.ProjectName)
+	assert.Equal(t, "Index", template.UpperName)
+	assert.Equal(t, "index", template.LowerName)
+	assert.Equal(t, "entity", template.TemplateType)
+	assert.Equal(t, "entities/index.go", template.Path)
+	assert.IsType(t, &entities.Template{}, template)
+}

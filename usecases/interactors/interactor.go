@@ -1,6 +1,7 @@
 package interactors
 
 import (
+	"brewery/entities"
 	"brewery/usecases/repositories"
 	"fmt"
 	"log"
@@ -35,7 +36,38 @@ func (interactor interactorInteractor) CreateNewInteractor(name string) error {
 
 	interactor.repository.SetProjectName("")
 	interactorTemplate := interactor.repository.GetInteractorTemplate(name)
-	file, err := os.Create(interactorTemplate.Path)
+	err := createFile(interactorTemplate)
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	log.Printf("The file %s has been created\n", interactorTemplate.Path)
+	return nil
+}
+
+func (interactor interactorInteractor) CreateNewInterface(name string) error {
+	if _, err := os.Stat("usecases/repository"); os.IsNotExist(err) {
+		os.MkdirAll("usecases/repository", os.ModePerm)
+	}
+
+	interactor.repository.SetProjectName("")
+	interactorTemplate := interactor.repository.GetRepositoryInterfaceTemplate(name)
+	err := createFile(interactorTemplate)
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	log.Printf("The file %s has been created\n", interactorTemplate.Path)
+	return nil
+}
+
+func createFile(templateRepository *entities.Template) error {
+
+	file, err := os.Create(templateRepository.Path)
 
 	if err != nil {
 		log.Println(err)
@@ -44,14 +76,13 @@ func (interactor interactorInteractor) CreateNewInteractor(name string) error {
 
 	defer file.Close()
 
-	tmpl, _ := template.New(interactorTemplate.TemplateType).Parse(interactorTemplate.Template)
-	err = tmpl.Execute(file, interactorTemplate)
+	tmpl, _ := template.New(templateRepository.TemplateType).Parse(templateRepository.Template)
+	err = tmpl.Execute(file, templateRepository)
 
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
-	log.Printf("The file %s has been created\n", interactorTemplate.Path)
 	return nil
 }

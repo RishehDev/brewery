@@ -61,8 +61,13 @@ type AppController struct {
 // The input is the name of the interactor
 func (f generalTemplate) GetInteractorTemplate(name string) *entities.Template {
 	f.SetNames(name)
+
+	if f.ProjectName == "" {
+		f.Path = "usecases/interactors/" + f.LowerName + "_interactor.go"
+	} else {
+		f.Path = f.ProjectName + "/usecases/interactors/" + f.LowerName + "_interactor.go"
+	}
 	f.TemplateType = "Interactor"
-	f.Path = f.ProjectName + "/usecases/interactors/" + f.LowerName + "_interactor.go"
 	f.Template.Template = `package interactors
 
 type {{.UpperName}}Interactor interface {

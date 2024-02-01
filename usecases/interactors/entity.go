@@ -32,6 +32,10 @@ func (interactor entityInteractor) CreateNewEntity(name string, gorm bool) error
 		return err
 	}
 
+	if _, err := os.Stat("entities"); os.IsNotExist(err) {
+		os.Mkdir("entities", 0777)
+	}
+
 	interactor.repository.SetProjectName("")
 	entityTemplate := interactor.repository.GetEntityTemplate(name, gorm)
 	file, err := os.Create(entityTemplate.Path)

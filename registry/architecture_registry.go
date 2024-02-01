@@ -23,7 +23,7 @@ func (r *registry) NewEntityController() controllers.EntityController {
 }
 
 func (r *registry) NewInteractorController() controllers.InteractorController {
-	usecaseInteractor := interactors.NewUsecaseInteractor(
+	usecaseInteractor := interactors.NewInteractorInteractor(
 		repositories.NewGeneralTemplate(),
 	)
 	return controllers.NewInteractorController(usecaseInteractor)

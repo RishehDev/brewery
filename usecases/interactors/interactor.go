@@ -16,7 +16,7 @@ type interactorInteractor struct {
 	repository repositories.GeneralTemplate
 }
 
-func NewUsecaseInteractor(repository repositories.GeneralTemplate) InteractorInteractor {
+func NewInteractorInteractor(repository repositories.GeneralTemplate) InteractorInteractor {
 	return &interactorInteractor{
 		repository: repository,
 	}
@@ -27,6 +27,10 @@ func (interactor interactorInteractor) CreateNewInteractor(name string) error {
 	if _, err := os.Stat("go.mod"); os.IsNotExist(err) {
 		fmt.Println(PROJECT_NOT_FOUND)
 		return err
+	}
+
+	if _, err := os.Stat("usecases/interactors"); os.IsNotExist(err) {
+		os.MkdirAll("usecases/interactors", os.ModePerm)
 	}
 
 	interactor.repository.SetProjectName("")

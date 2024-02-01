@@ -49,8 +49,8 @@ func TestCreateInteractorNoFolder(t *testing.T) {
 
 	file.Close()
 	os.Remove("go.mod")
-	os.Remove("/usecases/interactors/user.go")
-	os.Remove("/usecases/interactors/")
+	os.Remove("usecases/interactors/user.go")
+	os.Remove("usecases/interactors/")
 }
 
 func TestCreateInteractorFailedNoMod(t *testing.T) {

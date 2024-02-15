@@ -17,5 +17,6 @@ func (r *registry) NewAppController() controllers.AppController {
 		Project:    r.NewProjectController(),
 		Entity:     r.NewEntityController(),
 		Interactor: r.NewInteractorController(),
+		Controller: r.NewControllerController(),
 	}
 }

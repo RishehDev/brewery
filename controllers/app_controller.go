@@ -13,4 +13,7 @@ type AppController struct {
 	Interactor interface {
 		InteractorController
 	}
+	Controller interface {
+		ControllerController
+	}
 }

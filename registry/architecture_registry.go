@@ -28,3 +28,10 @@ func (r *registry) NewInteractorController() controllers.InteractorController {
 	)
 	return controllers.NewInteractorController(usecaseInteractor)
 }
+
+func (r *registry) NewControllerController() controllers.ControllerController {
+	usecaseInteractor := interactors.NewControllerInteractor(
+		repositories.NewGeneralTemplate(),
+	)
+	return controllers.NewControllerController(usecaseInteractor)
+}

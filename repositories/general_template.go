@@ -3,6 +3,7 @@ package repositories
 import (
 	"brewery/entities"
 	"brewery/usecases/repositories"
+	"fmt"
 	"runtime"
 )
 
@@ -23,7 +24,15 @@ func NewGeneralTemplate() repositories.GeneralTemplate {
 func (f generalTemplate) GetControllerTemplate(name string) *entities.Template {
 	f.SetNames(name)
 	f.TemplateType = "Controller"
-	f.Path = f.ProjectName + "/controllers/" + f.LowerName + "_controller.go"
+
+	if f.ProjectName == "" {
+		fmt.Print("empty project")
+		f.Path = "controllers/" + f.LowerName + "_controller.go"
+	} else {
+		fmt.Print(" not empty project")
+		f.Path = f.ProjectName + "/controllers/" + f.LowerName + "_controller.go"
+	}
+
 	f.Template.Template = `package controllers
 
 type {{.UpperName}}Controller interface {
@@ -54,6 +63,29 @@ type AppController struct {
 		IndexController
 	}
 }`
+	return &f.Template
+}
+
+func (f generalTemplate) GetArchitectureTemplate(name string) *entities.Template {
+	f.SetNames(name)
+	f.TemplateType = "ArchitectureController"
+
+	if f.ProjectName == "" {
+		f.Path = "registry/architecture_registry.go"
+	} else {
+		f.Path = f.ProjectName + "registry/architecture_registry.go"
+	}
+	f.Template.Template =
+		`
+
+func (r *registry) New{{.UpperName}}Controller() controllers.ControllerController {
+	usecaseInteractor := interactors.New{{.UpperName}}Interactor(
+		repositories.NewGeneralTemplate(),
+	)
+	return controllers.New{{.UpperName}}Controller(usecaseInteractor)
+}
+`
+
 	return &f.Template
 }
 

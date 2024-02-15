@@ -14,4 +14,5 @@ type GeneralTemplate interface {
 	GetRegistryControllerTemplate(string) *entities.Template
 	GetModTemplate() *entities.Template
 	SetProjectName(string)
+	GetArchitectureTemplate(string) *entities.Template
 }

@@ -53,7 +53,7 @@ func (interactor interactorInteractor) CreateNewInterface(name string) error {
 	}
 
 	interactor.repository.SetProjectName("")
-	interactorTemplate := interactor.repository.GetRepositoryInterfaceTemplate(name)
+	interactorTemplate := interactor.repository.GetGatewayInterfaceTemplate(name)
 	err := createFile(interactorTemplate)
 
 	if err != nil {

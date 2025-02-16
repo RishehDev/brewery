@@ -5,6 +5,7 @@ import "brewery/usecases/interactors"
 type ProjectController interface {
 	CreateWebService(string) error
 	CreateCliApplication(string) error
+	CreateRegularApplication(string) error
 }
 
 type projectController struct {
@@ -23,4 +24,8 @@ func (a *projectController) CreateWebService(name string) error {
 
 func (a *projectController) CreateCliApplication(name string) error {
 	return a.archInteractor.CreateCliApplication(name)
+}
+
+func (a *projectController) CreateRegularApplication(name string) error {
+	return a.archInteractor.CreateRegularApplication(name)
 }

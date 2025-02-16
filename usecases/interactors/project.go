@@ -15,6 +15,7 @@ import (
 type ProjectInteractor interface {
 	CreateWebService(name string) error
 	CreateCliApplication(name string) error
+	CreateRegularApplication(name string) error
 }
 
 // projectInteractor contain all the repositories that this interactor needed.
@@ -23,6 +24,7 @@ type projectInteractor struct {
 	generalTemplate repositories.GeneralTemplate
 	httpTemplate    repositories.HTTPServerTemplate
 	cliTemplate     repositories.CliAppTemplate
+	regularTemplate repositories.RegularAppTemplate
 }
 
 // NewProjectInteractor is the constructor for NewProjectInteractor
@@ -32,11 +34,13 @@ func NewProjectInteractor(
 	repo repositories.GeneralTemplate,
 	httpRepo repositories.HTTPServerTemplate,
 	cliRepo repositories.CliAppTemplate,
+	regularRepo repositories.RegularAppTemplate,
 ) ProjectInteractor {
 	return &projectInteractor{
 		generalTemplate: repo,
 		httpTemplate:    httpRepo,
 		cliTemplate:     cliRepo,
+		regularTemplate: regularRepo,
 	}
 }
 
@@ -136,6 +140,48 @@ func (a projectInteractor) CreateCliApplication(name string) error {
 	return nil
 }
 
+// CreateRegularApp create all the structure for a cli application
+func (a projectInteractor) CreateRegularApplication(name string) error {
+	folders := []string{}
+	err := a.createFolders(name, folders)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	a.generalTemplate.SetProjectName(name)
+	a.regularTemplate.SetProjectName(name)
+	err = a.createGeneralFiles(name)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.regularTemplate.GetRegularControllerTemplate("index"))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	err = a.createFile(a.regularTemplate.GetRegularMainTemplate())
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	cmd := exec.Command("go", "mod", "tidy")
+	cmd.Dir = name
+	if err := cmd.Run(); err != nil {
+		log.Println(err)
+		return err
+	}
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	out, err := cmd.Output()
+	fmt.Println(string(out))
+
+	return nil
+}
+
 // createFolders a method for create all the folders
 // The input is an slice of strings with all the path
 func (a projectInteractor) createFolders(name string, specificFolders []string) error {
@@ -144,11 +190,11 @@ func (a projectInteractor) createFolders(name string, specificFolders []string) 
 		name + "/registry",
 		name + "/controllers",
 		name + "/usecases",
-		name + "/repositories",
+		name + "/gateways",
 		name + "/entities",
 		name + "/infrastructure",
 		name + "/usecases/interactors",
-		name + "/usecases/repositories",
+		name + "/usecases/gateways",
 		name + "/infrastructure",
 		name + "/infrastructure/http",
 	}

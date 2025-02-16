@@ -15,8 +15,10 @@ var projectCmd = &cobra.Command{
 		projectType, _ := cmd.Flags().GetString("projectType")
 		if projectType == "web-service" {
 			controller.Project.CreateWebService(name)
-		} else if projectType == "cli-application" {
+		} else if projectType == "cli-app" {
 			controller.Project.CreateCliApplication(name)
+		} else if projectType == "regular-app" {
+			controller.Project.CreateRegularApplication(name)
 		} else {
 			fmt.Println("The type no exist")
 		}
@@ -26,5 +28,5 @@ var projectCmd = &cobra.Command{
 func init() {
 	createCmd.AddCommand(projectCmd)
 	projectCmd.Flags().StringP("name", "n", "myProject", "Name of the project")
-	projectCmd.Flags().StringP("projectType", "t", "web-service", "Project Type")
+	projectCmd.Flags().StringP("projectType", "t", "regular-app", "Project Type")
 }

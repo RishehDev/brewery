@@ -11,6 +11,7 @@ func (r *registry) NewProjectController() controllers.ProjectController {
 		repositories.NewGeneralTemplate(),
 		repositories.NewHttpServerTemplate(),
 		repositories.NewCliAppTemplate(),
+		repositories.NewRegularAppTemplate(),
 	)
 	return controllers.NewProjectController(projectInteractor)
 }

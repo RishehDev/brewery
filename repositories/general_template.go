@@ -80,7 +80,7 @@ func (f generalTemplate) GetArchitectureTemplate(name string) *entities.Template
 
 func (r *registry) New{{.UpperName}}Controller() controllers.ControllerController {
 	usecaseInteractor := interactors.New{{.UpperName}}Interactor(
-		repositories.NewGeneralTemplate(),
+		gateways.NewGeneralTemplate(),
 	)
 	return controllers.New{{.UpperName}}Controller(usecaseInteractor)
 }
@@ -107,12 +107,12 @@ type {{.UpperName}}Interactor interface {
 }
 
 type {{.LowerName}}Interactor struct {
-	epository *repository.{{.UpperName}}Repository
+	epository *gateway.{{.UpperName}}Gateway
 }
 
-func New{{.UpperName}}Interactor(repository *repository.{{.UpperName}}Repository) {{.UpperName}}Interactor {
+func New{{.UpperName}}Interactor(gateway *gateway.{{.UpperName}}Gateway) {{.UpperName}}Interactor {
 	return &{{.LowerName}}Interactor{
-		repository : repository
+		gateway : gateway
 	}
 }
 
@@ -122,20 +122,20 @@ func (a *{{.LowerName}}Interactor) MyMethod() error {
 	return &f.Template
 }
 
-func (f generalTemplate) GetRepositoryInterfaceTemplate(name string) *entities.Template {
+func (f generalTemplate) GetGatewayInterfaceTemplate(name string) *entities.Template {
 	f.SetNames(name)
 
 	if f.ProjectName == "" {
-		f.Path = "usecases/repositories/" + f.LowerName + "_repository.go"
+		f.Path = "usecases/gateways/" + f.LowerName + "_gateway.go"
 	} else {
-		f.Path = f.ProjectName + "/usecases/repositories/" + f.LowerName + "_repository.go"
+		f.Path = f.ProjectName + "/usecases/gateways/" + f.LowerName + "_gateway.go"
 	}
 
-	f.TemplateType = "RepositoryInterface"
+	f.TemplateType = "GatewayInterface"
 	f.Template.Template = `
-		package repositories
+		package gateways
 
-		type {{.UpperName}}Repository interface {
+		type {{.UpperName}}Gateway interface {
 			MyMethod() error
 		}
 	`
@@ -143,9 +143,9 @@ func (f generalTemplate) GetRepositoryInterfaceTemplate(name string) *entities.T
 	return &f.Template
 }
 
-// GetRepositoryTemplate return the info for create a repository
-// The input is the name of the repository
-func (f generalTemplate) GetRepositoryTemplate(name string) *entities.Template {
+// GetGatewayTemplate return the info for create a gateway
+// The input is the name of the gateway
+func (f generalTemplate) GetGatewayTemplate(name string) *entities.Template {
 	return nil
 }
 

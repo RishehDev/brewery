@@ -119,20 +119,20 @@ func (a *{{.LowerName}}Interactor) MyMethod() error {
 	return &f.Template
 }
 
-func (f generalTemplate) GetRepositoryInterfaceTemplate(name string) *entities.Template {
+func (f generalTemplate) GetGatewayInterfaceTemplate(name string) *entities.Template {
 	f.SetNames(name)
 
 	if f.ProjectName == "" {
-		f.Path = "usecases/repositories/" + f.LowerName + "_repository.go"
+		f.Path = "usecases/gateways/" + f.LowerName + "_gateway.go"
 	} else {
-		f.Path = f.ProjectName + "/usecases/repositories/" + f.LowerName + "_repository.go"
+		f.Path = f.ProjectName + "/usecases/gateways/" + f.LowerName + "_gateway.go"
 	}
 
-	f.TemplateType = "RepositoryInterface"
+	f.TemplateType = "GatewayInterface"
 	f.Template.Template = `
-		package repositories
+		package gatewaya
 
-		type {{.UpperName}}Repository interface {
+		type {{.UpperName}}Gateway interface {
 			MyMethod() error
 		}
 	`
@@ -142,7 +142,7 @@ func (f generalTemplate) GetRepositoryInterfaceTemplate(name string) *entities.T
 
 // GetRepositoryTemplate return the info for create a repository
 // The input is the name of the repository
-func (f generalTemplate) GetRepositoryTemplate(name string) *entities.Template {
+func (f generalTemplate) GetGatewayTemplate(name string) *entities.Template {
 	return nil
 }
 
